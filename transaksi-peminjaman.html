@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Peminjaman Barang dan Peralatan Kelas</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* ===== WARNA ===== */
+        :root {
+            --coklat: #795438;
+            --coklat-tua: #4e3425;
+            --krem: #ead9c6;
+            --krem-muda: #fffaf3;
+            --latar: #f5eee5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding-top: 65px;
+            background: var(--latar);
+            color: var(--coklat-tua);
+            font-family: Arial, sans-serif;
+        }
+
+        /* ===== HEADER ===== */
+        .navbar {
+            height: 65px;
+            background: var(--krem-muda) !important;
+            border-bottom: 1px solid #d8c4ae;
+            box-shadow: 0 2px 8px #4e34251a;
+        }
+
+        .navbar .container-fluid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 15px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--coklat-tua) !important;
+            font-size: 19px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .app-logo {
+            height: 36px;
+            width: 36px;
+            object-fit: contain;
+        }
+
+        /* ===== SEARCH ===== */
+        .search-form {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            margin: 0 20px;
+        }
+
+        .search-form .form-control {
+            max-width: 400px;
+            border: 1px solid #c9ad91;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .search-form .btn {
+            background: var(--coklat);
+            color: white;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* ===== USER ===== */
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            background: white;
+            color: var(--coklat-tua);
+            border: 1px solid #d8c4ae;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .user-button:hover {
+            background: var(--krem);
+        }
+
+        .dropdown-menu {
+            border-color: #d8c4ae;
+        }
+
+        .dropdown-item:hover {
+            background: var(--krem);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            bottom: 0;
+            width: 220px;
+            padding: 20px 12px;
+            background: var(--krem);
+            border-right: 1px solid #c9ad91;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            color: #8b6a4c;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 12px;
+            margin-bottom: 5px;
+            color: var(--coklat-tua);
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: white;
+            background: var(--coklat);
+        }
+
+        /* DAFTAR MENU */
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links li {
+            list-style: none;
+        }
+
+        /* SUBMENU */
+        .sub-menu {
+            list-style: none;
+            padding-left: 25px;
+            margin: 5px 0 10px;
+        }
+
+        .sidebar .sub-menu a {
+            font-size: 12px;
+            color: #6b7280;
+            padding: 8px 10px;
+            text-decoration: none;
+        }
+
+        .sidebar .sub-menu a:hover,
+        .sidebar .sub-menu a.active {
+            color: white;
+            background: var(--coklat);
+            border-radius: 8px;
+        }
+
+        /* ===== KONTEN ===== */
+        main {
+            margin-left: 220px;
+            padding: 25px;
+            min-height: calc(100vh - 65px);
+        }
+
+        .box {
+            padding: 20px;
+            background: white;
+            border: 1px solid #e3d2c0;
+            border-radius: 12px;
+        }
+
+        .page-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #8b6a4c;
+            font-size: 14px;
+        }
+
+        .table-tools {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .table-tools .form-control {
+            max-width: 280px;
+        }
+
+        .form-control,
+        .form-select {
+            border-color: #c9ad91;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--coklat);
+            box-shadow: 0 0 0 0.2rem #79543833;
+        }
+
+        .table thead th {
+            background: var(--krem);
+            color: var(--coklat-tua);
+            white-space: nowrap;
+        }
+
+        .btn-brown {
+            background: var(--coklat);
+            border-color: var(--coklat);
+            color: white;
+        }
+
+        .btn-brown:hover {
+            background: var(--coklat-tua);
+            border-color: var(--coklat-tua);
+            color: white;
+        }
+
+        .btn-outline-brown {
+            background: white;
+            border-color: var(--coklat);
+            color: var(--coklat);
+        }
+
+        .btn-outline-brown:hover {
+            background: var(--krem);
+            border-color: var(--coklat);
+            color: var(--coklat-tua);
+        }
+
+        .modal-header {
+            background: var(--krem-muda);
+        }
+
+        /* ===== STATUS & RINGKASAN ===== */
+        .badge-dipinjam {
+            background: #e08a1e;
+            color: white;
+        }
+
+        .ringkasan {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 14px 22px;
+            background: var(--krem);
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        /* ===== RESPONSIVE (layar kecil) ===== */
+        @media (max-width: 768px) {
+            .navbar-brand span {
+                display: none;
+            }
+
+            .search-form {
+                margin: 0 5px;
+            }
+
+            .sidebar {
+                width: 180px;
+                padding: 15px 8px;
+            }
+
+            .sidebar a {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+
+            main {
+                margin-left: 180px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <nav class="navbar navbar-light fixed-top">
+        <div class="container-fluid">
+
+            <!-- Logo dan nama aplikasi (kiri) -->
+            <a class="navbar-brand" href="#">
+                <img src="gambar logo.jpg" alt="Logo Aplikasi" class="app-logo">
+                <span>Aplikasi Peminjaman</span>
+            </a>
+
+            <!-- Pencarian menu (tengah) -->
+            <form class="search-form" id="searchForm">
+                <input
+                    class="form-control"
+                    id="searchInput"
+                    type="search"
+                    placeholder="Search..."
+                    aria-label="Search"
+                >
+                <button class="btn" type="submit" aria-label="Cari">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+            <!-- Menu user (kanan) -->
+            <div class="dropdown">
+                <button
+                    class="user-button dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fas fa-user-circle fa-lg"></i>
+                    <span>User</span>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user me-2"></i>Profil Saya
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cog me-2"></i>Pengaturan
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item" href="index.html">
+                            <i class="fas fa-sign-out-alt me-2"></i>Log Out
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- ===== SIDEBAR MENU ===== -->
+   <aside class="sidebar">
+    <div class="sidebar-title">MENU UTAMA</div>
+
+    <ul class="nav-links">
+        <li>
+            <a href="dashboard.html" data-nama="Dashboard">
+                <i class="fas fa-house"></i> Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="data-master.html" data-nama="Data Master">
+                <i class="fas fa-database"></i> Data Master
+            </a>
+
+            <ul class="sub-menu">
+                <li><a href="kategori.html">• Kategori Barang</a></li>
+                <li><a href="barang.html">• Barang</a></li>
+                <li><a href="peminjaman1.html">• Peminjaman</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="transaksi.html" data-nama="Transaksi">
+                <i class="fas fa-exchange-alt"></i> Transaksi
+            </a>
+
+            <ul class="sub-menu">
+                <li><a href="transaksi-peminjaman.html">• Peminjaman</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="laporan.html" data-nama="Laporan">
+                <i class="fas fa-chart-bar"></i> Laporan
+            </a>
+            <ul class="sub-menu">
+                <li><a href="laporan-dipinjam.html">• Barang Masih Dipinjam</a></li>
+                <li><a href="laporan-riwayat.html">• Barang Dikembalikan</a></li>
+                <li><a href="laporan-rekap.html">• Laporan Rekap</a></li>
+
+        </li>
+    </ul>
+</aside>
+
+    <!-- ===== KONTEN UTAMA ===== -->
+    <main>
+        <!-- Halaman: Transaksi Peminjaman -->
+        <section>
+            <div class="page-header">
+                <div>
+                    <h2>Peminjaman</h2>
+                    <p>Catat peminjaman baru dan proses pengembalian barang.</p>
+                </div>
+            </div>
+
+            <!-- Form catat peminjaman baru -->
+            <div class="box mb-4">
+                <h5 class="mb-3">Catat peminjaman baru</h5>
+
+                <form id="formPinjam" novalidate>
+                    <div class="row g-3">
+
+                        <div class="col-md-3">
+                            <label for="pilihPeminjam" class="form-label">Peminjam</label>
+                            <select id="pilihPeminjam" class="form-select"></select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="pilihBarang" class="form-label">Barang (stok tersedia)</label>
+                            <select id="pilihBarang" class="form-select"></select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="inputJumlah" class="form-label">Jumlah</label>
+                            <input type="number" id="inputJumlah" class="form-control" min="1" value="1">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="inputTglPinjam" class="form-label">Tgl pinjam</label>
+                            <input type="date" id="inputTglPinjam" class="form-control">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label d-none d-md-block">&nbsp;</label>
+                            <button type="submit" class="btn btn-brown w-100">Simpan</button>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+            <!-- Daftar peminjaman -->
+            <div class="box">
+                <div class="table-tools">
+                    <h5 class="mb-0 align-self-center">Daftar peminjaman</h5>
+
+                    <div class="d-flex flex-wrap gap-2">
+                        <select id="filterStatus" class="form-select w-auto">
+                            <option value="">Semua status</option>
+                            <option value="Dipinjam">Dipinjam</option>
+                            <option value="Kembali">Kembali</option>
+                        </select>
+                        <input type="date" id="filterTanggal" class="form-control">
+                        <button class="btn btn-brown" id="tombolFilter">Filter</button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Peminjam</th>
+                                <th>Barang</th>
+                                <th>Jml</th>
+                                <th>Tgl Pinjam</th>
+                                <th>Tgl Kembali</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelTransaksi"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FORM KEMBALIKAN BARANG ===== -->
+    <div class="modal fade" id="modalKembali" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="formKembali" novalidate>
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="judulKembali">Kembalikan barang</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label for="inputTglKembali" class="form-label">Tgl kembali</label>
+                            <input type="date" id="inputTglKembali" class="form-control">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="inputKondisiKembali" class="form-label">Kondisi saat kembali</label>
+                            <select id="inputKondisiKembali" class="form-select">
+                                <option value="Baik">Baik</option>
+                                <option value="Rusak Ringan">Rusak Ringan</option>
+                                <option value="Rusak Berat">Rusak Berat</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan pengembalian</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== FORM UBAH PEMINJAMAN ===== -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="formEdit" novalidate>
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="judulEdit">Ubah peminjaman</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <label for="editJumlah" class="form-label">Jumlah</label>
+                            <input type="number" id="editJumlah" class="form-control" min="1">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-6">
+                            <label for="editTglPinjam" class="form-label">Tgl pinjam</label>
+                            <input type="date" id="editTglPinjam" class="form-control">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-6" id="wadahTglKembali">
+                            <label for="editTglKembali" class="form-label">Tgl kembali</label>
+                            <input type="date" id="editTglKembali" class="form-control">
+                            <div class="invalid-feedback"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-brown">Simpan</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data.js"></script>
+
+    <script>
+        /* ==========================================
+           BAGIAN 1: MENU SIDEBAR
+           ========================================== */
+
+        const menuLinks = document.querySelectorAll(".sidebar a");
+
+        // Mengetahui halaman yang sedang dibuka
+        let halamanAktif = window.location.pathname.split("/").pop() || "transaksi-peminjaman.html";
+
+        // Menandai menu yang aktif
+        menuLinks.forEach(function (link) {
+            if (link.getAttribute("href") === halamanAktif) {
+                link.classList.add("active");
+            }
+        });
+
+        /* ==================================================
+           BAGIAN 2: PENCARIAN MENU (kolom search di header)
+           ================================================== */
+        document.getElementById("searchForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const query = document.getElementById("searchInput").value.trim().toLowerCase();
+            if (query === "") return;
+
+            let found = false;
+
+            menuLinks.forEach(function (link) {
+                if (!found && link.textContent.toLowerCase().includes(query)) {
+                    link.click();
+                    found = true;
+                }
+            });
+
+            if (!found) {
+                alert("Menu tidak ditemukan.");
+            }
+        });
+
+        /* ==================================================
+           BAGIAN 3: TRANSAKSI PEMINJAMAN
+           ================================================== */
+
+        let dataTransaksi = DB.ambil("transaksi");
+        let dataBarang    = DB.ambil("barang");
+        const dataPeminjam = DB.ambil("peminjam");
+
+        let idBerikutnya = dataTransaksi.reduce(function (maks, t) {
+            return Math.max(maks, t.id);
+        }, 0) + 1;
+
+        let idKembali = null;   // transaksi yang sedang dikembalikan
+        let idEdit = null;      // transaksi yang sedang diubah
+
+        // Form catat peminjaman
+        const formPinjam     = document.getElementById("formPinjam");
+        const pilihPeminjam  = document.getElementById("pilihPeminjam");
+        const pilihBarang    = document.getElementById("pilihBarang");
+        const inputJumlah    = document.getElementById("inputJumlah");
+        const inputTglPinjam = document.getElementById("inputTglPinjam");
+
+        // Daftar dan filter
+        const tabelTransaksi = document.getElementById("tabelTransaksi");
+        const filterStatus   = document.getElementById("filterStatus");
+        const filterTanggal  = document.getElementById("filterTanggal");
+
+        // Form kembalikan
+        const formKembali         = document.getElementById("formKembali");
+        const inputTglKembali     = document.getElementById("inputTglKembali");
+        const inputKondisiKembali = document.getElementById("inputKondisiKembali");
+        const modalKembali = new bootstrap.Modal(document.getElementById("modalKembali"));
+
+        // Form ubah
+        const formEdit       = document.getElementById("formEdit");
+        const editJumlah     = document.getElementById("editJumlah");
+        const editTglPinjam  = document.getElementById("editTglPinjam");
+        const editTglKembali = document.getElementById("editTglKembali");
+        const wadahTglKembali = document.getElementById("wadahTglKembali");
+        const modalEdit = new bootstrap.Modal(document.getElementById("modalEdit"));
+
+        // Mencari nama peminjam dan nama barang
+        function namaPeminjam(nim) {
+            const data = dataPeminjam.find(function (p) { return p.nim === nim; });
+            return data ? data.nama : nim;
+        }
+
+        function cariBarang(kode) {
+            return dataBarang.find(function (b) { return b.kode === kode; });
+        }
+
+        function namaBarang(kode) {
+            const data = cariBarang(kode);
+            return data ? data.nama : kode;
+        }
+
+        // Isi pilihan peminjam dan barang (hanya yang stoknya masih ada)
+        function isiPilihan() {
+            pilihPeminjam.innerHTML =
+                '<option value="">Pilih peminjam</option>' +
+                dataPeminjam.map(function (p) {
+                    return `<option value="${amanHtml(p.nim)}">${amanHtml(p.nama)} (${amanHtml(p.nim)})</option>`;
+                }).join("");
+
+            const adaStok = dataBarang.filter(function (b) {
+                return hitungTersedia(b, dataTransaksi) > 0;
+            });
+
+            pilihBarang.innerHTML =
+                '<option value="">Pilih barang</option>' +
+                adaStok.map(function (b) {
+                    const sisa = hitungTersedia(b, dataTransaksi);
+                    return `<option value="${amanHtml(b.kode)}">${amanHtml(b.nama)} (tersedia ${sisa})</option>`;
+                }).join("");
+        }
+
+        // Label status
+        function labelStatus(status) {
+            if (status === "Dipinjam") {
+                return '<span class="badge badge-dipinjam">Dipinjam</span>';
+            }
+            return '<span class="badge bg-success">Kembali</span>';
+        }
+
+        // Tombol aksi sesuai status
+        function tombolAksi(item) {
+            const tombolEdit = `
+                <button class="btn btn-sm btn-outline-secondary"
+                        onclick="bukaFormEdit(${item.id})" title="Ubah">
+                    <i class="fas fa-pen"></i>
+                </button>`;
+
+            if (item.status === "Dipinjam") {
+                return `
+                    <button class="btn btn-sm btn-outline-success"
+                            onclick="bukaFormKembali(${item.id})">
+                        <i class="fas fa-rotate-left me-1"></i> Kembalikan
+                    </button>
+                    ${tombolEdit}`;
+            }
+
+            return `
+                ${tombolEdit}
+                <button class="btn btn-sm btn-outline-danger"
+                        onclick="hapusTransaksi(${item.id})" title="Hapus">
+                    <i class="fas fa-trash"></i>
+                </button>`;
+        }
+
+        // Tampilkan daftar peminjaman (dengan filter status dan tanggal)
+        function tampilkanTransaksi() {
+            const hasil = dataTransaksi.filter(function (t) {
+                const cocokStatus =
+                    filterStatus.value === "" || t.status === filterStatus.value;
+
+                const cocokTanggal =
+                    filterTanggal.value === "" || t.tglPinjam === filterTanggal.value;
+
+                return cocokStatus && cocokTanggal;
+            });
+
+            if (hasil.length === 0) {
+                tabelTransaksi.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center text-secondary py-4">
+                            Data peminjaman tidak ditemukan.
+                        </td>
+                    </tr>`;
+                return;
+            }
+
+            tabelTransaksi.innerHTML = hasil.map(function (t) {
+                return `
+                    <tr>
+                        <td>${amanHtml(namaPeminjam(t.nim))}</td>
+                        <td>${amanHtml(namaBarang(t.kode))}</td>
+                        <td>${t.jumlah}</td>
+                        <td>${formatTanggal(t.tglPinjam)}</td>
+                        <td>${formatTanggal(t.tglKembali)}</td>
+                        <td>${labelStatus(t.status)}</td>
+                        <td class="text-center text-nowrap">${tombolAksi(t)}</td>
+                    </tr>`;
+            }).join("");
+        }
+
+        // Simpan semua perubahan lalu segarkan tampilan
+        function simpanSemua() {
+            DB.simpan("transaksi", dataTransaksi);
+            DB.simpan("barang", dataBarang);
+            isiPilihan();
+            tampilkanTransaksi();
+        }
+
+        /* ---------- Catat peminjaman baru ---------- */
+        formPinjam.addEventListener("submit", function (event) {
+            event.preventDefault();
+            bersihkanError(formPinjam);
+
+            const nim    = pilihPeminjam.value;
+            const kode   = pilihBarang.value;
+            const jumlah = Number(inputJumlah.value);
+            let valid = true;
+
+            if (nim === "") {
+                tampilkanError(pilihPeminjam, "Peminjam wajib dipilih");
+                valid = false;
+            }
+
+            if (kode === "") {
+                tampilkanError(pilihBarang, "Barang wajib dipilih");
+                valid = false;
+            }
+
+            if (inputJumlah.value === "" || !Number.isInteger(jumlah) || jumlah < 1) {
+                tampilkanError(inputJumlah, "Minimal 1");
+                valid = false;
+            } else if (kode !== "") {
+                const sisa = hitungTersedia(cariBarang(kode), dataTransaksi);
+
+                if (jumlah > sisa) {
+                    tampilkanError(inputJumlah, "Jumlah melebihi stok tersedia (" + sisa + ")");
+                    valid = false;
+                }
+            }
+
+            if (inputTglPinjam.value === "") {
+                tampilkanError(inputTglPinjam, "Tanggal wajib diisi");
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            dataTransaksi.unshift({
+                id: idBerikutnya++,
+                nim: nim,
+                kode: kode,
+                jumlah: jumlah,
+                tglPinjam: inputTglPinjam.value,
+                tglKembali: null,
+                kondisiKembali: null,
+                status: "Dipinjam"
+            });
+
+            simpanSemua();
+            formPinjam.reset();
+            inputJumlah.value = 1;
+            inputTglPinjam.value = hariIni();
+        });
+
+        /* ---------- Kembalikan barang ---------- */
+        function bukaFormKembali(id) {
+            const t = dataTransaksi.find(function (item) { return item.id === id; });
+
+            idKembali = id;
+            bersihkanError(formKembali);
+
+            document.getElementById("judulKembali").textContent =
+                "Kembalikan barang — " + namaPeminjam(t.nim) + " / " + namaBarang(t.kode);
+
+            inputTglKembali.value = hariIni();
+            inputTglKembali.min = t.tglPinjam;
+            inputKondisiKembali.value = "Baik";
+            modalKembali.show();
+        }
+
+        formKembali.addEventListener("submit", function (event) {
+            event.preventDefault();
+            bersihkanError(formKembali);
+
+            const t = dataTransaksi.find(function (item) { return item.id === idKembali; });
+
+            if (inputTglKembali.value === "") {
+                tampilkanError(inputTglKembali, "Tanggal wajib diisi");
+                return;
+            }
+
+            if (inputTglKembali.value < t.tglPinjam) {
+                tampilkanError(inputTglKembali, "Tidak boleh sebelum tgl pinjam");
+                return;
+            }
+
+            t.status = "Kembali";
+            t.tglKembali = inputTglKembali.value;
+            t.kondisiKembali = inputKondisiKembali.value;
+
+            // Kondisi barang diperbarui sesuai kondisi saat dikembalikan
+            const barang = cariBarang(t.kode);
+            if (barang) {
+                barang.kondisi = inputKondisiKembali.value;
+            }
+
+            modalKembali.hide();
+            simpanSemua();
+        });
+
+        /* ---------- Ubah peminjaman ---------- */
+        function bukaFormEdit(id) {
+            const t = dataTransaksi.find(function (item) { return item.id === id; });
+
+            idEdit = id;
+            bersihkanError(formEdit);
+
+            document.getElementById("judulEdit").textContent =
+                "Ubah peminjaman — " + namaPeminjam(t.nim) + " / " + namaBarang(t.kode);
+
+            editJumlah.value = t.jumlah;
+            editTglPinjam.value = t.tglPinjam;
+            editTglKembali.value = t.tglKembali || "";
+            wadahTglKembali.style.display = t.status === "Kembali" ? "block" : "none";
+            modalEdit.show();
+        }
+
+        formEdit.addEventListener("submit", function (event) {
+            event.preventDefault();
+            bersihkanError(formEdit);
+
+            const t = dataTransaksi.find(function (item) { return item.id === idEdit; });
+            const barang = cariBarang(t.kode);
+            const jumlah = Number(editJumlah.value);
+            let valid = true;
+
+            // Batas jumlah: stok tersedia + jumlah lama (jika masih dipinjam)
+            let batas = barang.jumlah;
+            if (t.status === "Dipinjam") {
+                batas = hitungTersedia(barang, dataTransaksi) + t.jumlah;
+            }
+
+            if (editJumlah.value === "" || !Number.isInteger(jumlah) || jumlah < 1) {
+                tampilkanError(editJumlah, "Minimal 1");
+                valid = false;
+            } else if (jumlah > batas) {
+                tampilkanError(editJumlah, "Jumlah melebihi stok tersedia (" + batas + ")");
+                valid = false;
+            }
+
+            if (editTglPinjam.value === "") {
+                tampilkanError(editTglPinjam, "Tanggal wajib diisi");
+                valid = false;
+            }
+
+            if (t.status === "Kembali") {
+                if (editTglKembali.value === "") {
+                    tampilkanError(editTglKembali, "Tanggal wajib diisi");
+                    valid = false;
+                } else if (editTglKembali.value < editTglPinjam.value) {
+                    tampilkanError(editTglKembali, "Tidak boleh sebelum tgl pinjam");
+                    valid = false;
+                }
+            }
+
+            if (!valid) return;
+
+            t.jumlah = jumlah;
+            t.tglPinjam = editTglPinjam.value;
+
+            if (t.status === "Kembali") {
+                t.tglKembali = editTglKembali.value;
+            }
+
+            modalEdit.hide();
+            simpanSemua();
+        });
+
+        /* ---------- Hapus peminjaman (hanya yang sudah kembali) ---------- */
+        function hapusTransaksi(id) {
+            if (confirm("Yakin ingin menghapus data peminjaman ini?")) {
+                dataTransaksi = dataTransaksi.filter(function (item) {
+                    return item.id !== id;
+                });
+
+                simpanSemua();
+            }
+        }
+
+        // Filter daftar
+        filterStatus.addEventListener("change", tampilkanTransaksi);
+        filterTanggal.addEventListener("change", tampilkanTransaksi);
+        document.getElementById("tombolFilter").addEventListener("click", tampilkanTransaksi);
+
+        // Tampilan pertama kali
+        inputTglPinjam.value = hariIni();
+        isiPilihan();
+        tampilkanTransaksi();
+    </script>
+
+</body>
+</html>

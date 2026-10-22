@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Halaman Login - Peminjaman Barang dan Peralatan Kelas</title>
+<style>
+:root {
+    --brown-900: #3b2210;
+    --brown-700: #6b3d1a;
+    --brown-500: #8a5a2e;
+    --cream: #f3dfc6;
+    --ink: #2a1d12;
+    --muted: #7a6a5c;
+    --line: #e6ddd3;
+    --white: #ffffff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "DM Sans", system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--white);
+  }
+  .page { display: grid; grid-template-columns: 1fr 1fr; min-height: 100%; }
+
+  /* Panel kiri: ucapan (coklat) */
+  .welcome {
+    position: relative;
+    overflow: hidden;
+    padding: 40px 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--cream);
+    background: linear-gradient(160deg, var(--brown-900) 0%, var(--brown-700) 60%, var(--brown-500) 100%);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
+  .logo {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; letter-spacing: .04em;
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.35);
+    color: #fff;
+  }
+  .logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .brand b { display: block; font-size: 16px; color: #fff; }
+  .brand span { font-size: 13px; opacity: .8; }
+
+  .greeting { position: relative; z-index: 1; max-width: 460px; }
+  .greeting h1 {
+    font-family: "Fraunces", Georgia, serif;
+    font-weight: 600;
+    font-size: clamp(38px, 4.6vw, 60px);
+    line-height: 1.05;
+    color: #fff;
+    margin-bottom: 20px;
+  }
+  .greeting p { font-size: 17px; line-height: 1.7; opacity: .88; }
+
+  .welcome::before, .welcome::after {
+    content: ""; position: absolute; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.05);
+  }
+  .welcome::before { width: 380px; height: 380px; right: -120px; bottom: 60px; }
+  .welcome::after { width: 230px; height: 230px; right: 110px; bottom: -40px; }
+  .welcome .foot { position: relative; z-index: 1; font-size: 13px; opacity: .7; }
+
+  /* Panel kanan: form (putih) */
+  .form-side {
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    padding: 40px 24px;
+  }
+  .form-box { width: 100%; max-width: 400px; }
+  .form-box .hello { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+  .form-box h2 { font-size: 32px; line-height: 1.15; margin-bottom: 8px; color: var(--ink); }
+  .form-box .sub { font-size: 15px; color: var(--muted); margin-bottom: 30px; }
+
+  label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .field { margin-bottom: 20px; }
+  input {
+    width: 100%; height: 50px; padding: 0 16px;
+    font: inherit; font-size: 15px; color: var(--ink);
+    background: #fdfaf7;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: #a99b8e; }
+  input:focus { outline: none; border-color: var(--brown-500); box-shadow: 0 0 0 3px rgba(138,90,46,.2); }
+
+  .forgot { display: block; text-align: right; font-size: 13px; margin: -8px 0 26px; }
+  a { color: var(--brown-700); font-weight: 700; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible { outline: 3px solid rgba(138,90,46,.45); outline-offset: 2px; }
+
+  button {
+    width: 100%; height: 50px; border: 0; border-radius: 12px; cursor: pointer;
+    font: inherit; font-size: 15px; font-weight: 700; color: #fff;
+    background: var(--brown-700);
+    box-shadow: 0 8px 18px rgba(107,61,26,.25);
+    transition: background .15s, transform .1s;
+  }
+  button:hover { background: var(--brown-900); }
+  button:active { transform: translateY(1px); }
+
+  .register { text-align: center; font-size: 14px; color: var(--muted); margin-top: 26px; }
+  .note { margin-top: 22px; font-size: 13px; line-height: 1.6; color: var(--muted); text-align: center; }
+
+  @media (max-width: 800px) {
+    .page { grid-template-columns: 1fr; }
+    .welcome { padding: 28px 24px 36px; gap: 36px; }
+    .greeting h1 { font-size: 34px; }
+    .welcome::before, .welcome::after { display: none; }
+    .welcome .foot { display: none; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <section class="welcome">
+    <div class="brand">
+     <div class="logo"><img src="gambar logo.jpg" alt="Logo Aplikasi"></div>
+      <div>
+        <b>Peminjaman Kelas</b>
+        <span>Barang dan peralatan kelas</span>
+      </div>
+    </div>
+
+    <div class="greeting">
+      <h1>Selamat datang kembali.</h1>
+      <p>Pinjam barang dan peralatan kelas, pantau statusnya, dan kembalikan tepat waktu dalam satu aplikasi.</p>
+    </div>
+
+    <div class="foot">Aplikasi Peminjaman Barang dan Peralatan Kelas</div>
+  </section>
+
+  <section class="form-side">
+    <div class="form-box">
+      <p class="hello">Halaman Login</p>
+      <h2>Masuk ke akun</h2>
+      <p class="sub">Masuk untuk melihat dan mengajukan peminjaman kamu.</p>
+
+      <form action="#" method="post">
+        <div class="field">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="username" placeholder="Masukkan username" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Masukkan password" autocomplete="current-password" required>
+        </div>
+        <a class="forgot" href="#">Lupa password?</a>
+        <button type="submit">Masuk</button>
+      </form>
+      <script>
+  document.querySelector('form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    window.location.href = 'dashboard.html';
+  });
+</script>
+      <p class="register">Belum punya akun? <a href="registrasi.html">Registrasi disini</a></p>
+    </div>
+  </section>
+</main>
+</body>
+</html>

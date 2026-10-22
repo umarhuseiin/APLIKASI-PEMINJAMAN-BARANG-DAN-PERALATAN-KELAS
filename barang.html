@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Peminjaman Barang dan Peralatan Kelas</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* ===== WARNA ===== */
+        :root {
+            --coklat: #795438;
+            --coklat-tua: #4e3425;
+            --krem: #ead9c6;
+            --krem-muda: #fffaf3;
+            --latar: #f5eee5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding-top: 65px;
+            background: var(--latar);
+            color: var(--coklat-tua);
+            font-family: Arial, sans-serif;
+        }
+
+        /* ===== HEADER ===== */
+        .navbar {
+            height: 65px;
+            background: var(--krem-muda) !important;
+            border-bottom: 1px solid #d8c4ae;
+            box-shadow: 0 2px 8px #4e34251a;
+        }
+
+        .navbar .container-fluid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 15px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--coklat-tua) !important;
+            font-size: 19px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .app-logo {
+            height: 36px;
+            width: 36px;
+            object-fit: contain;
+        }
+
+        /* ===== SEARCH ===== */
+        .search-form {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            margin: 0 20px;
+        }
+
+        .search-form .form-control {
+            max-width: 400px;
+            border: 1px solid #c9ad91;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .search-form .btn {
+            background: var(--coklat);
+            color: white;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* ===== USER ===== */
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            background: white;
+            color: var(--coklat-tua);
+            border: 1px solid #d8c4ae;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .user-button:hover {
+            background: var(--krem);
+        }
+
+        .dropdown-menu {
+            border-color: #d8c4ae;
+        }
+
+        .dropdown-item:hover {
+            background: var(--krem);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            bottom: 0;
+            width: 220px;
+            padding: 20px 12px;
+            background: var(--krem);
+            border-right: 1px solid #c9ad91;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            color: #8b6a4c;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 12px;
+            margin-bottom: 5px;
+            color: var(--coklat-tua);
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: white;
+            background: var(--coklat);
+        }
+
+        /* DAFTAR MENU */
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links li {
+            list-style: none;
+        }
+
+        /* SUBMENU */
+        .sub-menu {
+            list-style: none;
+            padding-left: 25px;
+            margin: 5px 0 10px;
+        }
+
+        .sidebar .sub-menu a {
+            font-size: 12px;
+            color: #6b7280;
+            padding: 8px 10px;
+            text-decoration: none;
+        }
+
+        .sidebar .sub-menu a:hover,
+        .sidebar .sub-menu a.active {
+            color: white;
+            background: var(--coklat);
+            border-radius: 8px;
+        }
+
+        /* ===== KONTEN ===== */
+        main {
+            margin-left: 220px;
+            padding: 25px;
+            min-height: calc(100vh - 65px);
+        }
+
+        .box {
+            padding: 20px;
+            background: white;
+            border: 1px solid #e3d2c0;
+            border-radius: 12px;
+        }
+
+        .page-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #8b6a4c;
+            font-size: 14px;
+        }
+
+        .table-tools {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .table-tools .form-control {
+            max-width: 280px;
+        }
+
+        .form-control,
+        .form-select {
+            border-color: #c9ad91;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--coklat);
+            box-shadow: 0 0 0 0.2rem #79543833;
+        }
+
+        .table thead th {
+            background: var(--krem);
+            color: var(--coklat-tua);
+            white-space: nowrap;
+        }
+
+        .btn-brown {
+            background: var(--coklat);
+            border-color: var(--coklat);
+            color: white;
+        }
+
+        .btn-brown:hover {
+            background: var(--coklat-tua);
+            border-color: var(--coklat-tua);
+            color: white;
+        }
+
+        .btn-outline-brown {
+            background: white;
+            border-color: var(--coklat);
+            color: var(--coklat);
+        }
+
+        .btn-outline-brown:hover {
+            background: var(--krem);
+            border-color: var(--coklat);
+            color: var(--coklat-tua);
+        }
+
+        .modal-header {
+            background: var(--krem-muda);
+        }
+
+        /* ===== STATUS & RINGKASAN ===== */
+        .badge-dipinjam {
+            background: #e08a1e;
+            color: white;
+        }
+
+        .ringkasan {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 14px 22px;
+            background: var(--krem);
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        /* ===== RESPONSIVE (layar kecil) ===== */
+        @media (max-width: 768px) {
+            .navbar-brand span {
+                display: none;
+            }
+
+            .search-form {
+                margin: 0 5px;
+            }
+
+            .sidebar {
+                width: 180px;
+                padding: 15px 8px;
+            }
+
+            .sidebar a {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+
+            main {
+                margin-left: 180px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <nav class="navbar navbar-light fixed-top">
+        <div class="container-fluid">
+
+            <!-- Logo dan nama aplikasi (kiri) -->
+            <a class="navbar-brand" href="#">
+                <img src="gambar logo.jpg" alt="Logo Aplikasi" class="app-logo">
+                <span>Aplikasi Peminjaman</span>
+            </a>
+
+            <!-- Pencarian menu (tengah) -->
+            <form class="search-form" id="searchForm">
+                <input
+                    class="form-control"
+                    id="searchInput"
+                    type="search"
+                    placeholder="Search..."
+                    aria-label="Search"
+                >
+                <button class="btn" type="submit" aria-label="Cari">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+            <!-- Menu user (kanan) -->
+            <div class="dropdown">
+                <button
+                    class="user-button dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fas fa-user-circle fa-lg"></i>
+                    <span>User</span>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user me-2"></i>Profil Saya
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cog me-2"></i>Pengaturan
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item" href="index.html">
+                            <i class="fas fa-sign-out-alt me-2"></i>Log Out
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- ===== SIDEBAR MENU ===== -->
+    <!-- SIDEBAR MENU -->
+<aside class="sidebar">
+    <div class="sidebar-title">MENU UTAMA</div>
+
+    <ul class="nav-links">
+        <li>
+            <a href="dashboard.html" data-nama="Dashboard">
+                <i class="fas fa-house"></i> Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="data-master.html" data-nama="Data Master">
+                <i class="fas fa-database"></i> Data Master
+            </a>
+
+            <ul class="sub-menu">
+                <li><a href="kategori.html">• Kategori Barang</a></li>
+                <li><a href="barang.html">• Barang</a></li>
+                <li><a href="peminjaman1.html">• Peminjaman</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="transaksi.html" data-nama="Transaksi">
+                <i class="fas fa-exchange-alt"></i> Transaksi
+            </a>
+
+            <ul class="sub-menu">
+                <li><a href="peminjaman1.html">• Peminjaman</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="laporan.html" data-nama="Laporan">
+                <i class="fas fa-chart-bar"></i> Laporan
+            </a>
+            <ul class="sub-menu">
+                <li><a href="laporan-dipinjam.html">• Barang Masih Dipinjam</a></li>
+                <li><a href="laporan-riwayat.html">• Barang Dikembalikan</a></li>
+                <li><a href="laporan-rekap.html">• Laporan Rekap</a></li>
+
+        </li>
+    </ul>
+</aside>
+
+    <!-- ===== KONTEN UTAMA ===== -->
+    <main>
+        <!-- Halaman: Data Barang -->
+        <section>
+            <div class="page-header">
+                <div>
+                    <h2>Data Barang</h2>
+                    <p>Kelola data barang: tambah, ubah, dan hapus.</p>
+                </div>
+                <button class="btn btn-brown" onclick="bukaFormTambah()">
+                    <i class="fas fa-plus me-1"></i> Tambah Barang
+                </button>
+            </div>
+
+            <div class="box">
+                <div class="table-tools">
+                    <div class="d-flex flex-wrap gap-2">
+                        <input
+                            type="search"
+                            id="cariBarang"
+                            class="form-control"
+                            placeholder="Cari kode / nama..."
+                        >
+                        <select id="filterKategori" class="form-select w-auto"></select>
+                        <select id="filterKondisi" class="form-select w-auto">
+                            <option value="">Semua kondisi</option>
+                            <option value="Baik">Baik</option>
+                            <option value="Rusak Ringan">Rusak Ringan</option>
+                            <option value="Rusak Berat">Rusak Berat</option>
+                        </select>
+                        <button class="btn btn-brown" id="tombolFilter">Filter</button>
+                    </div>
+                    <span class="align-self-center small text-secondary" id="jumlahBarang"></span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Kode</th>
+                                <th>Nama</th>
+                                <th>Kategori</th>
+                                <th>Jumlah</th>
+                                <th>Tersedia</th>
+                                <th>Kondisi</th>
+                                <th>Lokasi</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelBarang"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FORM TAMBAH / UBAH BARANG ===== -->
+    <div class="modal fade" id="modalBarang" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <form class="modal-content" id="formBarang" novalidate>
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="judulForm">Tambah Barang</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <label for="inputKode" class="form-label">Kode barang (unik)</label>
+                            <input type="text" id="inputKode" class="form-control" maxlength="20">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <label for="inputNama" class="form-label">Nama barang</label>
+                            <input type="text" id="inputNama" class="form-control" maxlength="60">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="inputKategori" class="form-label">Kategori</label>
+                            <select id="inputKategori" class="form-select"></select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-2">
+                            <label for="inputJumlah" class="form-label">Jumlah</label>
+                            <input type="number" id="inputJumlah" class="form-control" min="0">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="inputKondisi" class="form-label">Kondisi</label>
+                            <select id="inputKondisi" class="form-select">
+                                <option value="Baik">Baik</option>
+                                <option value="Rusak Ringan">Rusak Ringan</option>
+                                <option value="Rusak Berat">Rusak Berat</option>
+                            </select>
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label for="inputLokasi" class="form-label">Lokasi</label>
+                            <input type="text" id="inputLokasi" class="form-control" maxlength="40">
+                            <div class="invalid-feedback"></div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-brown">Simpan</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data.js"></script>
+
+    <script>
+        /* ==========================================
+           BAGIAN 1: MENU SIDEBAR
+           ========================================== */
+
+        const menuLinks = document.querySelectorAll(".sidebar a");
+
+        // Mengetahui halaman yang sedang dibuka
+        let halamanAktif = window.location.pathname.split("/").pop() || "barang.html";
+
+        // Menandai menu yang aktif
+        menuLinks.forEach(function (link) {
+            if (link.getAttribute("href") === halamanAktif) {
+                link.classList.add("active");
+            }
+        });
+
+        /* ==================================================
+           BAGIAN 2: PENCARIAN MENU (kolom search di header)
+           ================================================== */
+        document.getElementById("searchForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const query = document.getElementById("searchInput").value.trim().toLowerCase();
+            if (query === "") return;
+
+            let found = false;
+
+            menuLinks.forEach(function (link) {
+                if (!found && link.textContent.toLowerCase().includes(query)) {
+                    link.click();
+                    found = true;
+                }
+            });
+
+            if (!found) {
+                alert("Menu tidak ditemukan.");
+            }
+        });
+
+        /* ==================================================
+           BAGIAN 3: DATA MASTER - BARANG
+           ================================================== */
+
+        let dataBarang = DB.ambil("barang");
+        const dataKategori = DB.ambil("kategori");
+        let kodeDiedit = null;   // null = mode tambah, teks = mode ubah
+
+        const tabelBarang    = document.getElementById("tabelBarang");
+        const jumlahBarang   = document.getElementById("jumlahBarang");
+        const cariBarang     = document.getElementById("cariBarang");
+        const filterKategori = document.getElementById("filterKategori");
+        const filterKondisi  = document.getElementById("filterKondisi");
+        const formBarang     = document.getElementById("formBarang");
+        const modalBarang    = new bootstrap.Modal(document.getElementById("modalBarang"));
+
+        const inputKode     = document.getElementById("inputKode");
+        const inputNama     = document.getElementById("inputNama");
+        const inputKategori = document.getElementById("inputKategori");
+        const inputJumlah   = document.getElementById("inputJumlah");
+        const inputKondisi  = document.getElementById("inputKondisi");
+        const inputLokasi   = document.getElementById("inputLokasi");
+
+        // Warna label kondisi
+        function labelKondisi(kondisi) {
+            let warna = "bg-success";
+
+            if (kondisi === "Rusak Ringan") {
+                warna = "bg-warning text-dark";
+            } else if (kondisi === "Rusak Berat") {
+                warna = "bg-danger";
+            }
+
+            return `<span class="badge ${warna}">${amanHtml(kondisi)}</span>`;
+        }
+
+        // Isi pilihan kategori (filter dan form)
+        function isiPilihanKategori() {
+            const daftar = dataKategori.map(function (item) {
+                return `<option value="${amanHtml(item.nama)}">${amanHtml(item.nama)}</option>`;
+            }).join("");
+
+            filterKategori.innerHTML =
+                '<option value="">Semua kategori</option>' + daftar;
+
+            inputKategori.innerHTML =
+                '<option value="">Pilih kategori</option>' + daftar;
+        }
+
+        // Tampilkan barang ke tabel (dengan pencarian dan filter)
+        function tampilkanBarang() {
+            const kataKunci = cariBarang.value.trim().toLowerCase();
+            const transaksi = DB.ambil("transaksi");
+
+            const hasil = dataBarang.filter(function (item) {
+                const cocokKata =
+                    item.kode.toLowerCase().includes(kataKunci) ||
+                    item.nama.toLowerCase().includes(kataKunci);
+
+                const cocokKategori =
+                    filterKategori.value === "" ||
+                    item.kategori === filterKategori.value;
+
+                const cocokKondisi =
+                    filterKondisi.value === "" ||
+                    item.kondisi === filterKondisi.value;
+
+                return cocokKata && cocokKategori && cocokKondisi;
+            });
+
+            if (hasil.length === 0) {
+                tabelBarang.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="text-center text-secondary py-4">
+                            Data tidak ditemukan.
+                        </td>
+                    </tr>`;
+            } else {
+                tabelBarang.innerHTML = hasil.map(function (item) {
+                    const tersedia = hitungTersedia(item, transaksi);
+
+                    return `
+                        <tr>
+                            <td>${amanHtml(item.kode)}</td>
+                            <td>${amanHtml(item.nama)}</td>
+                            <td>${amanHtml(item.kategori)}</td>
+                            <td>${item.jumlah}</td>
+                            <td>${tersedia}</td>
+                            <td>${labelKondisi(item.kondisi)}</td>
+                            <td>${amanHtml(item.lokasi)}</td>
+                            <td class="text-center text-nowrap">
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        onclick="bukaFormUbah('${item.kode}')" title="Ubah">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="hapusBarang('${item.kode}')" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>`;
+                }).join("");
+            }
+
+            jumlahBarang.textContent = "Total: " + hasil.length + " barang";
+        }
+
+        // Buka form tambah barang
+        function bukaFormTambah() {
+            kodeDiedit = null;
+            formBarang.reset();
+            bersihkanError(formBarang);
+            inputKode.readOnly = false;
+            document.getElementById("judulForm").textContent = "Tambah Barang";
+            modalBarang.show();
+        }
+
+        // Buka form ubah barang
+        function bukaFormUbah(kode) {
+            const item = dataBarang.find(function (barang) {
+                return barang.kode === kode;
+            });
+
+            kodeDiedit = kode;
+            bersihkanError(formBarang);
+            document.getElementById("judulForm").textContent = "Ubah Barang";
+
+            inputKode.value     = item.kode;
+            inputKode.readOnly  = true;   // kode tidak boleh diganti
+            inputNama.value     = item.nama;
+            inputKategori.value = item.kategori;
+            inputJumlah.value   = item.jumlah;
+            inputKondisi.value  = item.kondisi;
+            inputLokasi.value   = item.lokasi;
+
+            modalBarang.show();
+        }
+
+        // Simpan barang (tambah baru atau ubah) + validasi
+        formBarang.addEventListener("submit", function (event) {
+            event.preventDefault();
+            bersihkanError(formBarang);
+
+            const kode     = inputKode.value.trim().toUpperCase();
+            const nama     = inputNama.value.trim();
+            const kategori = inputKategori.value;
+            const jumlah   = Number(inputJumlah.value);
+            const lokasi   = inputLokasi.value.trim();
+            let valid = true;
+
+            // Validasi kode
+            if (kode === "") {
+                tampilkanError(inputKode, "Kode barang wajib diisi");
+                valid = false;
+            } else if (kodeDiedit === null && dataBarang.some(function (b) { return b.kode === kode; })) {
+                tampilkanError(inputKode, "Kode sudah dipakai");
+                valid = false;
+            }
+
+            // Validasi nama
+            if (nama === "") {
+                tampilkanError(inputNama, "Nama barang wajib diisi");
+                valid = false;
+            }
+
+            // Validasi kategori
+            if (kategori === "") {
+                tampilkanError(inputKategori, "Kategori wajib dipilih");
+                valid = false;
+            }
+
+            // Validasi jumlah
+            if (inputJumlah.value === "" || !Number.isInteger(jumlah) || jumlah < 0) {
+                tampilkanError(inputJumlah, "Isi dengan angka 0 atau lebih");
+                valid = false;
+            } else if (kodeDiedit !== null) {
+                const sedangDipinjam = jumlahDipinjam(kodeDiedit, DB.ambil("transaksi"));
+
+                if (jumlah < sedangDipinjam) {
+                    tampilkanError(inputJumlah, "Minimal " + sedangDipinjam + " (sedang dipinjam)");
+                    valid = false;
+                }
+            }
+
+            // Validasi lokasi
+            if (lokasi === "") {
+                tampilkanError(inputLokasi, "Lokasi wajib diisi");
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            const dataBaru = {
+                kode: kode,
+                nama: nama,
+                kategori: kategori,
+                jumlah: jumlah,
+                kondisi: inputKondisi.value,
+                lokasi: lokasi
+            };
+
+            if (kodeDiedit === null) {
+                dataBarang.push(dataBaru);
+            } else {
+                dataBarang = dataBarang.map(function (item) {
+                    return item.kode === kodeDiedit ? dataBaru : item;
+                });
+            }
+
+            DB.simpan("barang", dataBarang);
+            modalBarang.hide();
+            tampilkanBarang();
+        });
+
+        // Hapus barang (ditolak jika sudah pernah dipinjam)
+        function hapusBarang(kode) {
+            const pernahDipinjam = DB.ambil("transaksi").some(function (t) {
+                return t.kode === kode;
+            });
+
+            if (pernahDipinjam) {
+                alert("Barang " + kode + " tidak bisa dihapus karena sudah punya riwayat peminjaman.");
+                return;
+            }
+
+            if (confirm("Yakin ingin menghapus barang " + kode + "?")) {
+                dataBarang = dataBarang.filter(function (item) {
+                    return item.kode !== kode;
+                });
+
+                DB.simpan("barang", dataBarang);
+                tampilkanBarang();
+            }
+        }
+
+        // Pencarian dan filter
+        cariBarang.addEventListener("input", tampilkanBarang);
+        filterKategori.addEventListener("change", tampilkanBarang);
+        filterKondisi.addEventListener("change", tampilkanBarang);
+        document.getElementById("tombolFilter").addEventListener("click", tampilkanBarang);
+
+        // Tampilkan data pertama kali
+        isiPilihanKategori();
+        tampilkanBarang();
+    </script>
+
+</body>
+</html>

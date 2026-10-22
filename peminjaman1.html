@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplikasi Peminjaman Barang dan Peralatan Kelas</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        /* ===== WARNA ===== */
+        :root {
+            --coklat: #795438;
+            --coklat-tua: #4e3425;
+            --krem: #ead9c6;
+            --krem-muda: #fffaf3;
+            --latar: #f5eee5;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding-top: 65px;
+            background: var(--latar);
+            color: var(--coklat-tua);
+            font-family: Arial, sans-serif;
+        }
+
+        /* ===== HEADER ===== */
+        .navbar {
+            height: 65px;
+            background: var(--krem-muda) !important;
+            border-bottom: 1px solid #d8c4ae;
+            box-shadow: 0 2px 8px #4e34251a;
+        }
+
+        .navbar .container-fluid {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 15px;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--coklat-tua) !important;
+            font-size: 19px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .app-logo {
+            height: 36px;
+            width: 36px;
+            object-fit: contain;
+        }
+
+        /* ===== SEARCH ===== */
+        .search-form {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            margin: 0 20px;
+        }
+
+        .search-form .form-control {
+            max-width: 400px;
+            border: 1px solid #c9ad91;
+            border-radius: 8px 0 0 8px;
+        }
+
+        .search-form .btn {
+            background: var(--coklat);
+            color: white;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* ===== USER ===== */
+        .user-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 12px;
+            background: white;
+            color: var(--coklat-tua);
+            border: 1px solid #d8c4ae;
+            border-radius: 8px;
+            white-space: nowrap;
+        }
+
+        .user-button:hover {
+            background: var(--krem);
+        }
+
+        .dropdown-menu {
+            border-color: #d8c4ae;
+        }
+
+        .dropdown-item:hover {
+            background: var(--krem);
+        }
+
+        /* ===== SIDEBAR ===== */
+        .sidebar {
+            position: fixed;
+            top: 65px;
+            left: 0;
+            bottom: 0;
+            width: 220px;
+            padding: 20px 12px;
+            background: var(--krem);
+            border-right: 1px solid #c9ad91;
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            color: #8b6a4c;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 12px;
+            margin-bottom: 5px;
+            color: var(--coklat-tua);
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 8px;
+            transition: 0.2s;
+        }
+
+        .sidebar a i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            color: white;
+            background: var(--coklat);
+        }
+
+        /* DAFTAR MENU */
+        .nav-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-links li {
+            list-style: none;
+        }
+
+        /* SUBMENU */
+        .sub-menu {
+            list-style: none;
+            padding-left: 25px;
+            margin: 5px 0 10px;
+        }
+
+        .sidebar .sub-menu a {
+            font-size: 12px;
+            color: #6b7280;
+            padding: 8px 10px;
+            text-decoration: none;
+        }
+
+        .sidebar .sub-menu a:hover,
+        .sidebar .sub-menu a.active {
+            color: white;
+            background: var(--coklat);
+            border-radius: 8px;
+        }
+
+        /* ===== KONTEN ===== */
+        main {
+            margin-left: 220px;
+            padding: 25px;
+            min-height: calc(100vh - 65px);
+        }
+
+        .box {
+            padding: 20px;
+            background: white;
+            border: 1px solid #e3d2c0;
+            border-radius: 12px;
+        }
+
+        .page-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .page-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #8b6a4c;
+            font-size: 14px;
+        }
+
+        .table-tools {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .table-tools .form-control {
+            max-width: 280px;
+        }
+
+        .form-control,
+        .form-select {
+            border-color: #c9ad91;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--coklat);
+            box-shadow: 0 0 0 0.2rem #79543833;
+        }
+
+        .table thead th {
+            background: var(--krem);
+            color: var(--coklat-tua);
+            white-space: nowrap;
+        }
+
+        .btn-brown {
+            background: var(--coklat);
+            border-color: var(--coklat);
+            color: white;
+        }
+
+        .btn-brown:hover {
+            background: var(--coklat-tua);
+            border-color: var(--coklat-tua);
+            color: white;
+        }
+
+        .btn-outline-brown {
+            background: white;
+            border-color: var(--coklat);
+            color: var(--coklat);
+        }
+
+        .btn-outline-brown:hover {
+            background: var(--krem);
+            border-color: var(--coklat);
+            color: var(--coklat-tua);
+        }
+
+        .modal-header {
+            background: var(--krem-muda);
+        }
+
+        /* ===== STATUS & RINGKASAN ===== */
+        .badge-dipinjam {
+            background: #e08a1e;
+            color: white;
+        }
+
+        .ringkasan {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 14px 22px;
+            background: var(--krem);
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        /* ===== RESPONSIVE (layar kecil) ===== */
+        @media (max-width: 768px) {
+            .navbar-brand span {
+                display: none;
+            }
+
+            .search-form {
+                margin: 0 5px;
+            }
+
+            .sidebar {
+                width: 180px;
+                padding: 15px 8px;
+            }
+
+            .sidebar a {
+                padding: 12px 10px;
+                font-size: 13px;
+            }
+
+            main {
+                margin-left: 180px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ===== HEADER ===== -->
+    <nav class="navbar navbar-light fixed-top">
+        <div class="container-fluid">
+
+            <!-- Logo dan nama aplikasi (kiri) -->
+            <a class="navbar-brand" href="#">
+                <img src="gambar logo.jpg" alt="Logo Aplikasi" class="app-logo">
+                <span>Aplikasi Peminjaman</span>
+            </a>
+
+            <!-- Pencarian menu (tengah) -->
+            <form class="search-form" id="searchForm">
+                <input
+                    class="form-control"
+                    id="searchInput"
+                    type="search"
+                    placeholder="Search..."
+                    aria-label="Search"
+                >
+                <button class="btn" type="submit" aria-label="Cari">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+
+            <!-- Menu user (kanan) -->
+            <div class="dropdown">
+                <button
+                    class="user-button dropdown-toggle"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    <i class="fas fa-user-circle fa-lg"></i>
+                    <span>User</span>
+                </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-user me-2"></i>Profil Saya
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-cog me-2"></i>Pengaturan
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <a class="dropdown-item" href="index.html">
+                            <i class="fas fa-sign-out-alt me-2"></i>Log Out
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+
+    <!-- ===== SIDEBAR MENU ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-title">MENU UTAMA</div>
+
+    <ul class="nav-links">
+        <li>
+            <a href="dashboard.html" data-nama="Dashboard">
+                <i class="fas fa-house"></i> Dashboard
+            </a>
+        </li>
+
+        <li>
+            <a href="data-master.html" data-nama="Data Master">
+                <i class="fas fa-database"></i> Data Master
+            </a>
+
+            <ul class="sub-menu">
+                <li><a href="kategori.html">• Kategori Barang</a></li>
+                <li><a href="barang.html">• Barang</a></li>
+                <li><a href="peminjaman1.html">• Peminjaman</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="transaksi.html" data-nama="Transaksi">
+                <i class="fas fa-exchange-alt"></i> Transaksi
+            </a>
+
+            <ul class="sub-menu">
+                <li><a href="transaksi-peminjaman.html">• Peminjaman</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="laporan.html" data-nama="Laporan">
+                <i class="fas fa-chart-bar"></i> Laporan
+            </a>
+            <ul class="sub-menu">
+                <li><a href="laporan-dipinjam.html">• Barang Masih Dipinjam</a></li>
+                <li><a href="laporan-riwayat.html">• Barang Dikembalikan</a></li>
+                <li><a href="laporan-rekap.html">• Laporan Rekap</a></li>
+
+        </li>
+    </ul>
+</aside>
+    <!-- ===== KONTEN UTAMA ===== -->
+    <main>
+        <!-- Halaman: Data Peminjam -->
+        <section>
+            <div class="page-header">
+                <div>
+                    <h2>Data Peminjam</h2>
+                    <p>Kelola data anggota peminjam: tambah, ubah, dan hapus.</p>
+                </div>
+                <button class="btn btn-brown" onclick="bukaFormTambah()">
+                    <i class="fas fa-plus me-1"></i> Tambah Peminjam
+                </button>
+            </div>
+
+            <div class="box">
+                <div class="table-tools">
+                    <input
+                        type="search"
+                        id="cariPeminjam"
+                        class="form-control"
+                        placeholder="Cari nama / NIM..."
+                    >
+                    <span class="align-self-center small text-secondary" id="jumlahPeminjam"></span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>NIM</th>
+                                <th>Nama</th>
+                                <th>Kelas</th>
+                                <th class="text-center" style="width: 130px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabelPeminjam"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ===== FORM TAMBAH / UBAH PEMINJAM ===== -->
+    <div class="modal fade" id="modalPeminjam" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <form class="modal-content" id="formPeminjam" novalidate>
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="judulForm">Tambah Peminjam</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="inputNim" class="form-label">NIM</label>
+                        <input type="text" id="inputNim" class="form-control" maxlength="20">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="inputNama" class="form-label">Nama lengkap</label>
+                        <input type="text" id="inputNama" class="form-control" maxlength="60">
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div>
+                        <label for="inputKelas" class="form-label">Kelas</label>
+                        <input type="text" id="inputKelas" class="form-control" maxlength="20">
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-brown">Simpan</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== JAVASCRIPT ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="data.js"></script>
+
+    <script>
+        /* ==========================================
+           BAGIAN 1: MENU SIDEBAR
+           ========================================== */
+
+        const menuLinks = document.querySelectorAll(".sidebar a");
+
+        // Mengetahui halaman yang sedang dibuka
+        let halamanAktif = window.location.pathname.split("/").pop() || "peminjaman.html";
+
+        // Menandai menu yang aktif
+        menuLinks.forEach(function (link) {
+            if (link.getAttribute("href") === halamanAktif) {
+                link.classList.add("active");
+            }
+        });
+
+        /* ==================================================
+           BAGIAN 2: PENCARIAN MENU (kolom search di header)
+           ================================================== */
+        document.getElementById("searchForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+
+            const query = document.getElementById("searchInput").value.trim().toLowerCase();
+            if (query === "") return;
+
+            let found = false;
+
+            menuLinks.forEach(function (link) {
+                if (!found && link.textContent.toLowerCase().includes(query)) {
+                    link.click();
+                    found = true;
+                }
+            });
+
+            if (!found) {
+                alert("Menu tidak ditemukan.");
+            }
+        });
+
+        /* ==================================================
+           BAGIAN 3: DATA MASTER - PEMINJAM
+           ================================================== */
+
+        let dataPeminjam = DB.ambil("peminjam");
+        let nimDiedit = null;   // null = mode tambah, teks = mode ubah
+
+        const tabelPeminjam  = document.getElementById("tabelPeminjam");
+        const jumlahPeminjam = document.getElementById("jumlahPeminjam");
+        const cariPeminjam   = document.getElementById("cariPeminjam");
+        const formPeminjam   = document.getElementById("formPeminjam");
+        const modalPeminjam  = new bootstrap.Modal(document.getElementById("modalPeminjam"));
+
+        const inputNim   = document.getElementById("inputNim");
+        const inputNama  = document.getElementById("inputNama");
+        const inputKelas = document.getElementById("inputKelas");
+
+        // Tampilkan peminjam ke tabel (bisa dicari berdasarkan nama / NIM)
+        function tampilkanPeminjam() {
+            const kataKunci = cariPeminjam.value.trim().toLowerCase();
+
+            const hasil = dataPeminjam.filter(function (item) {
+                return item.nim.toLowerCase().includes(kataKunci) ||
+                       item.nama.toLowerCase().includes(kataKunci);
+            });
+
+            if (hasil.length === 0) {
+                tabelPeminjam.innerHTML = `
+                    <tr>
+                        <td colspan="4" class="text-center text-secondary py-4">
+                            Data tidak ditemukan.
+                        </td>
+                    </tr>`;
+            } else {
+                tabelPeminjam.innerHTML = hasil.map(function (item) {
+                    return `
+                        <tr>
+                            <td>${amanHtml(item.nim)}</td>
+                            <td>${amanHtml(item.nama)}</td>
+                            <td>${amanHtml(item.kelas)}</td>
+                            <td class="text-center text-nowrap">
+                                <button class="btn btn-sm btn-outline-secondary"
+                                        onclick="bukaFormUbah('${item.nim}')" title="Ubah">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="hapusPeminjam('${item.nim}')" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>`;
+                }).join("");
+            }
+
+            jumlahPeminjam.textContent = "Total: " + hasil.length + " peminjam";
+        }
+
+        // Buka form tambah peminjam
+        function bukaFormTambah() {
+            nimDiedit = null;
+            formPeminjam.reset();
+            bersihkanError(formPeminjam);
+            inputNim.readOnly = false;
+            document.getElementById("judulForm").textContent = "Tambah Peminjam";
+            modalPeminjam.show();
+        }
+
+        // Buka form ubah peminjam
+        function bukaFormUbah(nim) {
+            const item = dataPeminjam.find(function (peminjam) {
+                return peminjam.nim === nim;
+            });
+
+            nimDiedit = nim;
+            bersihkanError(formPeminjam);
+            document.getElementById("judulForm").textContent = "Ubah Peminjam";
+
+            inputNim.value    = item.nim;
+            inputNim.readOnly = true;   // NIM tidak boleh diganti
+            inputNama.value   = item.nama;
+            inputKelas.value  = item.kelas;
+
+            modalPeminjam.show();
+        }
+
+        // Simpan peminjam (tambah baru atau ubah) + validasi
+        formPeminjam.addEventListener("submit", function (event) {
+            event.preventDefault();
+            bersihkanError(formPeminjam);
+
+            const nim   = inputNim.value.trim();
+            const nama  = inputNama.value.trim();
+            const kelas = inputKelas.value.trim();
+            let valid = true;
+
+            // Validasi NIM
+            if (nim === "") {
+                tampilkanError(inputNim, "NIM wajib diisi");
+                valid = false;
+            } else if (nimDiedit === null && dataPeminjam.some(function (p) { return p.nim === nim; })) {
+                tampilkanError(inputNim, "NIM sudah terdaftar");
+                valid = false;
+            }
+
+            // Validasi nama
+            if (nama === "") {
+                tampilkanError(inputNama, "Nama lengkap wajib diisi");
+                valid = false;
+            }
+
+            // Validasi kelas
+            if (kelas === "") {
+                tampilkanError(inputKelas, "Kelas wajib diisi");
+                valid = false;
+            }
+
+            if (!valid) return;
+
+            const dataBaru = { nim: nim, nama: nama, kelas: kelas };
+
+            if (nimDiedit === null) {
+                dataPeminjam.push(dataBaru);
+            } else {
+                dataPeminjam = dataPeminjam.map(function (item) {
+                    return item.nim === nimDiedit ? dataBaru : item;
+                });
+            }
+
+            DB.simpan("peminjam", dataPeminjam);
+            modalPeminjam.hide();
+            tampilkanPeminjam();
+        });
+
+        // Hapus peminjam (ditolak jika sudah punya riwayat peminjaman)
+        function hapusPeminjam(nim) {
+            const pernahMeminjam = DB.ambil("transaksi").some(function (t) {
+                return t.nim === nim;
+            });
+
+            if (pernahMeminjam) {
+                alert("Peminjam ini tidak bisa dihapus karena sudah punya riwayat peminjaman.");
+                return;
+            }
+
+            if (confirm("Yakin ingin menghapus peminjam ini?")) {
+                dataPeminjam = dataPeminjam.filter(function (item) {
+                    return item.nim !== nim;
+                });
+
+                DB.simpan("peminjam", dataPeminjam);
+                tampilkanPeminjam();
+            }
+        }
+
+        // Cari peminjam saat mengetik
+        cariPeminjam.addEventListener("input", tampilkanPeminjam);
+
+        // Tampilkan data pertama kali
+        tampilkanPeminjam();
+    </script>
+
+</body>
+</html>

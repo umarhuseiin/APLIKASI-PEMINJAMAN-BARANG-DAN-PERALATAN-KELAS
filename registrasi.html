@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registrasi - Peminjaman Barang dan Peralatan Kelas</title>
+
+<style>
+  :root {
+    --brown-900: #3b2210;
+    --brown-700: #6b3d1a;
+    --brown-500: #8a5a2e;
+    --cream: #f3dfc6;
+    --ink: #2a1d12;
+    --muted: #7a6a5c;
+    --line: #e6ddd3;
+    --error: #b3261e;
+    --white: #ffffff;
+  }
+  
+  * { 
+    box-sizing: border-box; 
+    margin: 0; 
+    padding: 0; }
+  
+    html, body { 
+    height: 100%; 
+  }
+  body { 
+    font-family: "DM Sans", system-ui, sans-serif; 
+    color: var(--ink); 
+    background: var(--white); 
+  }
+  .page { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    min-height: 100%; 
+  }
+
+  .welcome {
+    position: relative; overflow: hidden;
+    padding: 40px 56px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    color: var(--cream);
+    background: linear-gradient(160deg, var(--brown-900) 0%, var(--brown-700) 60%, var(--brown-500) 100%);
+  }
+  .brand { display: flex; align-items: center; gap: 14px; position: relative; z-index: 1; }
+  .logo {
+    width: 52px; height: 52px; border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: 12px; font-weight: 700; letter-spacing: .04em;
+    background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.35); color: #fff;
+  }
+  .logo img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .brand b { display: block; font-size: 16px; color: #fff; }
+  .brand span { font-size: 13px; opacity: .8; }
+
+  .greeting { 
+    position: relative;
+     z-index: 1;
+      max-width: 460px; }
+  .greeting h1 {
+    font-family: "Fraunces", Georgia, serif; font-weight: 600;
+    font-size: clamp(38px, 4.6vw, 60px); line-height: 1.05; color: #fff; margin-bottom: 20px;
+  }
+  .greeting p { font-size: 17px; line-height: 1.7; opacity: .88; }
+  .welcome::before, .welcome::after {
+    content: ""; position: absolute; border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.05);
+  }
+  .welcome::before { width: 380px; height: 380px; right: -120px; bottom: 60px; }
+  .welcome::after { width: 230px; height: 230px; right: 110px; bottom: -40px; }
+  .welcome .foot { position: relative; z-index: 1; font-size: 13px; opacity: .7; }
+
+  .form-side { background: var(--white); display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+  .form-box { width: 100%; max-width: 400px; }
+  .form-box .hello { font-size: 14px; color: var(--muted); margin-bottom: 8px; }
+  .form-box h2 { font-size: 32px; line-height: 1.15; margin-bottom: 8px; }
+  .form-box .sub { font-size: 15px; color: var(--muted); margin-bottom: 26px; }
+
+  label { display: block; font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .field { margin-bottom: 16px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  input {
+    width: 100%; height: 50px; padding: 0 16px;
+    font: inherit; font-size: 15px; color: var(--ink);
+    background: #fdfaf7; border: 1px solid var(--line); border-radius: 12px;
+    transition: border-color .15s, box-shadow .15s;
+  }
+  input::placeholder { color: #a99b8e; }
+  input:focus { outline: none; border-color: var(--brown-500); box-shadow: 0 0 0 3px rgba(138,90,46,.2); }
+  input.invalid { border-color: var(--error); }
+  .error { display: none; margin-top: 6px; font-size: 13px; color: var(--error); }
+  .error.show { display: block; }
+
+  a { color: var(--brown-700); font-weight: 700; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  a:focus-visible, button:focus-visible { outline: 3px solid rgba(138,90,46,.45); outline-offset: 2px; }
+
+  button {
+    width: 100%; height: 50px; margin-top: 8px; border: 0; border-radius: 12px; cursor: pointer;
+    font: inherit; font-size: 15px; font-weight: 700; color: #fff;
+    background: var(--brown-700); box-shadow: 0 8px 18px rgba(107,61,26,.25);
+    transition: background .15s, transform .1s;
+  }
+  button:hover { background: var(--brown-900); }
+  button:active { transform: translateY(1px); }
+
+  .login-link { text-align: center; font-size: 14px; color: var(--muted); margin-top: 24px; }
+
+  @media (max-width: 800px) {
+    .page { grid-template-columns: 1fr; }
+    .welcome { padding: 28px 24px 36px; gap: 36px; }
+    .greeting h1 { font-size: 34px; }
+    .welcome::before, .welcome::after, .welcome .foot { display: none; }
+  }
+  @media (max-width: 420px) { .row { grid-template-columns: 1fr; gap: 0; } }
+</style>
+</head>
+<body>
+<main class="page">
+  <section class="welcome">
+    <div class="brand">
+      <div class="logo"><img src="gambar logo.jpg" alt="Logo Aplikasi"></div>
+      <div>
+        <b>Peminjaman Kelas</b>
+        <span>Barang dan peralatan kelas</span>
+      </div>
+    </div>
+
+    <div class="greeting">
+      <h1>Halo, selamat bergabung.</h1>
+      <p>Buat akun untuk mulai meminjam barang dan peralatan kelas, lalu pantau status peminjamanmu kapan saja.</p>
+    </div>
+
+    <div class="foot">Aplikasi Peminjaman Barang dan Peralatan Kelas</div>
+  </section>
+
+  <section class="form-side">
+    <div class="form-box">
+      <p class="hello">Halaman Registrasi</p>
+      <h2>Buat akun baru</h2>
+      <p class="sub">Isi data di bawah untuk mendaftar.</p>
+
+      <form id="regForm" action="#" method="post" novalidate>
+        <div class="field">
+          <label for="nama">Nama lengkap</label>
+          <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap" autocomplete="name" required>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="nama@email.com" autocomplete="email" required>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Minimal 6 karakter" autocomplete="new-password" minlength="6" required>
+          <p class="error" id="errPass">Password minimal 6 karakter.</p>
+        </div>
+
+        <div class="field">
+          <label for="confirm">Konfirmasi password</label>
+          <input type="password" id="confirm" name="confirm" placeholder="Ulangi password" autocomplete="new-password" required>
+          <p class="error" id="errConfirm">Password dan konfirmasi belum sama.</p>
+        </div>
+
+        <button type="submit">Daftar</button>
+      </form>
+
+      <p class="login-link">Sudah punya akun? <a href="index.html">Masuk disini</a></p>
+    </div>
+  </section>
+</main>
+
+<script>
+  const form = document.getElementById('regForm');
+  const pass = document.getElementById('password');
+  const confirmEl = document.getElementById('confirm');
+  const errPass = document.getElementById('errPass');
+  const errConfirm = document.getElementById('errConfirm');
+
+  function check() {
+    const shortPass = pass.value.length > 0 && pass.value.length < 6;
+    const mismatch = confirmEl.value.length > 0 && pass.value !== confirmEl.value;
+    pass.classList.toggle('invalid', shortPass);
+    confirmEl.classList.toggle('invalid', mismatch);
+    errPass.classList.toggle('show', shortPass);
+    errConfirm.classList.toggle('show', mismatch);
+    return !shortPass && !mismatch;
+  }
+  pass.addEventListener('input', check);
+  confirmEl.addEventListener('input', check);
+
+  form.addEventListener('submit', function (e) {
+    if (pass.value.length < 6 || pass.value !== confirmEl.value || !form.checkValidity()) {
+      e.preventDefault();
+      pass.value.length < 6 && (errPass.classList.add('show'), pass.classList.add('invalid'));
+      pass.value !== confirmEl.value && (errConfirm.classList.add('show'), confirmEl.classList.add('invalid'));
+      form.reportValidity();
+    }
+  });
+</script>
+</body>
+</html>
